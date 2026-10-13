@@ -1,0 +1,6 @@
+# Dependence File 
+*.d
+#Object File 
+*.o 
+# the exe file
+veclab
