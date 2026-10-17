@@ -16,7 +16,7 @@
 
 
 int main(){
-    linked *initial = newNode();
+    linked *initial = NULL;
     linked *end = initial;
     int index = 0;
 
@@ -47,6 +47,14 @@ int main(){
             //checks to see if the user wants to quit
             if(!strcmp(token1,"quit")){
                 printf("Thank you for using the VECTOR CALCULATOR\n");
+                linked *endpoint = end;
+                linked *next_endpoint = end->prev;
+                while(next_endpoint != NULL){
+                    delNode(endpoint);
+                    endpoint = next_endpoint;
+                    next_endpoint = next_endpoint->prev;
+            }
+                delNode(endpoint);
                 return 0;
             }
 
@@ -88,7 +96,8 @@ int main(){
                     next_endpoint = next_endpoint->prev;
             }
                 delNode(endpoint);
-                initial = newNode();
+                initial = NULL;
+                index = 0;
                 end = initial;
                 continue;
         }
@@ -212,11 +221,18 @@ int main(){
             }
             //If vector hold1 doesn't have a name then it needs to be set up as a new vector
             if(hold1 == NULL){
-             hold1 = &(end->vect);
+                if(initial == NULL){
+                    initial = newNode();
+                    end = initial;
+                    hold1 = &(initial->vect);
+                }
+            else{
              linked *node = newNode();
+             hold1 = &(node->vect);
              assignNext(end, node);
              assignPrev(node, end);
              end = node;
+            }
              index++;
              strcpy(hold1->name,token1);
             }
@@ -246,9 +262,10 @@ int main(){
             hold1->x = temp.x;
             hold1->y = temp.y;
             hold1->z = temp.z;
+            printf("%s = < %.2f, %.2f, %.2f >\n",hold1->name,hold1->x,hold1->y,hold1->z);
             }
     }
 }
     return 0;
 
-}
+}   

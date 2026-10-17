@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -c -Wall
+CFLAGS = -c -Wall -g
 LDFLAGS = 
 SOURCES = vector.c arithmetic.c linkedlist.c 
 OBJECTS=$(SOURCES:.c=.o)
