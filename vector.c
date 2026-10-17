@@ -44,9 +44,19 @@ int main(){
 
         //if only token1 has a input
         if(token2 == NULL && token3 == NULL && token4 == NULL && token5 == NULL){
+            //checking if token1 is empty
+            if(token1 == NULL){
+                printf("You entered a incorrect command: type in -h for help\n\n");
+                continue;
+            }
+            
             //checks to see if the user wants to quit
-            if(!strcmp(token1,"quit")){
+            else if(!strcmp(token1,"quit")){
                 printf("Thank you for using the VECTOR CALCULATOR\n");
+                if(initial == NULL){    //if initial has no nodes
+                    return 0;
+                }
+                //cleans the linkedlist then returns 0
                 linked *endpoint = end;
                 linked *next_endpoint = end->prev;
                 while(next_endpoint != NULL){
@@ -69,6 +79,9 @@ int main(){
                 printf("IF YOU WISH TO SEE ALL THE VECTORS CREATED ENTER LIST\n\n");
                 printf("IF YOU WISH TO LEAVE ENTER quit\n\n");
                 printf("IF YOU WISH TO CLEAN OUT YOUR VECTOR LIST INPUT clean\n\n");
+                printf("IF YOU WISH TO LOAD A FILE OF VECTORS INPUT load filename.csv\n\n");
+                printf("IF YOU WISH TO SAVE A FILE OF VECTORS INPUT save filename.csv\n\n");
+                printf("-------------HELP------------------\n");
             
             }
 
@@ -85,7 +98,7 @@ int main(){
                     printf("No vectors have been created\n\n");
                 }
             }
-
+            //starts from the end of the linkedlist and frees each node and sets initial and end to NULL
             else if(!strcmp(token1, "clean")){
                 printf("Cleaning vector list\n\n");
                 linked *endpoint = end;
@@ -124,7 +137,76 @@ int main(){
         
         //No such operators that only use token1 and token2
         else if(token3 == NULL && token4 == NULL && token5 == NULL){
-            printf("THIS IS NOT A VALID COMMAND TYPE IN -h IF YOU NEED HELP\n");
+            //Loads a file of vectors into the linkedlist
+            if(!strcmp(token1, "load")){
+                FILE *fp = fopen(token2, "r");
+                //checks if the file was opened correctly
+                if(fp == NULL){
+                    printf("FILE NOT FOUND: RETURNING TO TERMINAL\n");
+                    continue;
+                }
+                else{
+                    char read[50];
+                    //reads the file line by line and creates a new node if a vector is found
+                    while(fgets(read, 50, fp) != NULL){
+                        char *read1 = strtok(read, " ,\n");
+                        char *read2 = strtok(NULL, " ,\n");
+                        char *read3 = strtok(NULL, " ,\n");
+                        char *read4 = strtok(NULL, " ,\n");
+                        //if any of the reads are NULL continues to the next line in the file
+                        if(read1 == NULL || read2 == NULL || read3 == NULL || read4 == NULL){
+                            continue;
+                        }
+                        //adds a new node to the linkedlist with the vector values from the file
+                        else{
+                            linked *node = newNode();
+                            strcpy(node->vect.name,read1);
+                            node->vect.x = atof(read2);
+                            node->vect.y = atof(read3);
+                            node->vect.z = atof(read4);
+                            index++;
+                            if(initial == NULL){
+                                initial = node;
+                                end = initial;
+                            }
+                            else{
+                                assignNext(end, node);
+                                assignPrev(node, end);
+                                end = node;
+                            }
+                        }
+                    }
+                    //closes file
+                    fclose(fp);
+                    printf("File loaded!\n\n");
+                    
+                }
+                
+            }
+            //saves the linkedlist of vectors to a file
+            else if(!strcmp(token1, "save")){
+                FILE *fp = fopen(token2, "w");
+                if(fp == NULL){
+                    printf("FILE NOT FOUND: RETURNING TO TERMINAL\n");
+                    continue;
+                }
+                else{
+                    linked *temp_node = initial;
+                    //outputs until no more nodes are left
+                    while(temp_node != NULL){
+                        fprintf(fp,"%s, %.2f, %.2f, %.2f\n",temp_node->vect.name,temp_node->vect.x,temp_node->vect.y,temp_node->vect.z);
+                        temp_node = temp_node->next;
+                    }
+                    //closes file
+                    printf("file saved to: %s\n",token2);
+                    fclose(fp);
+                }
+
+            }
+
+            else{
+                printf("INVALID COMMAND: TYPE IN -h FOR HELP\n");
+            }
         }
 
         //Used to check if only vector arithmetic is being used without being inputted to a new vector
