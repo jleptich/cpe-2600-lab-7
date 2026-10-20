@@ -28,11 +28,11 @@ vector sub(vector *a, vector *b){
     return assign;
 }
 
-vector scalar_mult(vector *a, float x){
+vector scalar_mult(vector *a, float p){
     vector assign;
-    assign.x = a->x*x;
-    assign.y = a->y*x;
-    assign.z = a->z*x;
+    assign.x = a->x*p;
+    assign.y = a->y*p;
+    assign.z = a->z*p;
     return assign;
 }
 

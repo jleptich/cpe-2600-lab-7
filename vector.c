@@ -139,6 +139,11 @@ int main(){
         else if(token3 == NULL && token4 == NULL && token5 == NULL){
             //Loads a file of vectors into the linkedlist
             if(!strcmp(token1, "load")){
+                char *check = strrchr(token2, '.');
+                if(check == NULL || strcmp(check, ".csv")){
+                    printf("INVALID FILE TYPE: RETURNING TO TERMINAL\n");
+                    continue;
+                }
                 FILE *fp = fopen(token2, "r");
                 //checks if the file was opened correctly
                 if(fp == NULL){
@@ -159,6 +164,19 @@ int main(){
                         }
                         //adds a new node to the linkedlist with the vector values from the file
                         else{
+                            linked *temp_node = initial;
+                            while(temp_node != NULL){
+                                if(!strcmp(temp_node->vect.name,read1)){
+                                    temp_node->vect.x = atof(read2);
+                                    temp_node->vect.y = atof(read3);
+                                    temp_node->vect.z = atof(read4);
+                                    break;
+                                }
+                                temp_node = temp_node->next;
+                            }
+                            if(temp_node != NULL){
+                                continue;
+                            }
                             linked *node = newNode();
                             strcpy(node->vect.name,read1);
                             node->vect.x = atof(read2);
@@ -185,6 +203,11 @@ int main(){
             }
             //saves the linkedlist of vectors to a file
             else if(!strcmp(token1, "save")){
+                char *check = strrchr(token2, '.');
+                if(check == NULL || strcmp(check, ".csv")){
+                    printf("INVALID FILE TYPE: RETURNING TO TERMINAL\n");
+                    continue;
+                }
                 FILE *fp = fopen(token2, "w");
                 if(fp == NULL){
                     printf("FILE NOT FOUND: RETURNING TO TERMINAL\n");
